@@ -1,0 +1,94 @@
+import { MessageCircleHeart, ReceiptText, User } from "lucide-react";
+import InviteCard from "./ui/InviteCard";
+import MessageCard from "./ui/MessageCard";
+import SummaryCard from "./ui/SummaryCard";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import ScrollTrigger from "gsap/dist/ScrollTrigger";
+import { useRef } from "react";
+gsap.registerPlugin(ScrollTrigger);
+
+const features = [
+  {
+    title: "Invite participants to join the meeting",
+    icon: User,
+    component: <InviteCard className="bg-secondary/70 backdrop-blur-3xl" />,
+    bgStyle: "bg-invite bg-cover",
+    description:
+      "Easily invite participants to join the meeting with a simple click",
+  },
+  {
+    title: "Instant Messaging for Seamless Communication",
+    icon: MessageCircleHeart,
+    component: <MessageCard className="bg-secondary/70 backdrop-blur-3xl" />,
+    bgStyle: "bg-message bg-cover",
+    description:
+      "Send and receive messages in real time to keep your team connected and informed throughout the meeting",
+  },
+  {
+    title: "Transform notes into insights with out AI summary tool",
+    icon: ReceiptText,
+    component: <SummaryCard className="bg-secondary/70 backdrop-blur-3xl" />,
+    bgStyle: "bg-summary bg-cover",
+    description:
+      "Capture key points, decisions and actions automatically, Stay organized and productive while AI handles the details.",
+  },
+];
+const Features = () => {
+  const container = useRef(null);
+  useGSAP(
+    () => {
+      const timeline = gsap.timeline({
+        delay: 0.5,
+        scrollTrigger: {
+          trigger: container.current,
+          start: "20% bottom",
+          end: "bottom top",
+        },
+      });
+
+      timeline
+        .from(".main-title", { opacity: 0, x: -50 })
+        .from(".text-muted", { opacity: 0, x: -50 })
+        .from(".box", { opacity: 0, y: 100, stagger: 1 });
+    },
+    { scope: container }
+  );
+  return (
+    <div className="relative py-20 max-w-screen-lg mx-auto" ref={container}>
+      <div className="absolute left-[-300px] w-[322px] h-[348px] bg-gradient-to-r from-primary/50 to-primary-accent rounded-full blur-[150px] z-0" />
+
+      <div className="max-w-[800px] mx-auto p-4">
+        <h1 className="main-title">
+          Enhance your productivity in work and life with seamless meeting notes
+          for all video conferences.
+        </h1>
+        <p className="text-sm text-muted text-center mt-6">
+          Our meeting notes tool is your key to boosting productivity whether
+          you're at work or on the go.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 gap-4 p-4 mt-10 min-[900px]:grid-cols-3">
+        {features.map((feature, index) => (
+          <div
+            className="flex flex-col items-stretch justify-between bg-accent rounded-2xl shadow-card-inset overflow-hidden box"
+            key={index}
+          >
+            <div className={`p-4 h-[250px] overflow-hidden ${feature.bgStyle}`}>
+              {feature.component}
+            </div>
+            <div className="flex-1 p-4 bg-accent rounded-b-2xl shadow-card-inset">
+              <feature.icon />
+              <h3 className="text-sm my-2">{feature.title}</h3>
+              <p className="text-xs text-muted line-clamp-2">
+                {feature.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Features;
